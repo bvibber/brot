@@ -8,14 +8,22 @@ $(function() {
 		cx = -1,
 		cy = 0,
 		zoom = 4,
-		threads = parseInt($('#threads').val());
+		threads = parseInt($('#threads').val()),
+		workers = [];
 
 	function runBrot() {
 		$('#pixel-count').text(width * height);
 		ctx.clearRect(0, 0, width, height);
-		
-		var todo = height,
+
+		function terminate() {
+			$.each(workers, function() {
+				this.terminate();
+			});
 			workers = [];
+		}
+		terminate();
+
+		var todo = height;
 
 		var drawLine = function(event, thread) {
 			var msg = event.data,
@@ -42,10 +50,7 @@ $(function() {
 
 			todo--;
 			if (todo == 0) {
-				$.each(workers, function() {
-					this.terminate();
-				});
-				workers = null;
+				terminate();
 				var delta = Date.now() - startTime;
 				$('#time').text(delta + ' ms');
 				$('#pps').text((width * height) / (delta / 1000));
