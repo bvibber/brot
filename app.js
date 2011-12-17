@@ -4,9 +4,13 @@ $(function() {
 		canvas = $canvas[0],
 		ctx = canvas.getContext('2d'),
 		width = parseInt($canvas.attr('width')),
-		height = parseInt($canvas.attr('height'));
+		height = parseInt($canvas.attr('height')),
+		cx = -1,
+		cy = 0,
+		zoom = 4,
+		threads = parseInt($('#threads').val());
 
-	function runBrot(threads) {
+	function runBrot() {
 		$('#pixel-count').text(width * height);
 		ctx.clearRect(0, 0, width, height);
 		
@@ -59,9 +63,9 @@ $(function() {
 				var msg = {
 					width: width,
 					height: height,
-					cx: -1,
-					cy: 0,
-					zoom: 4,
+					cx: cx,
+					cy: cy,
+					zoom: zoom,
 					start: Math.floor((height / threads) * i),
 					end: Math.floor((height / threads) * (i + 1)) - 1
 				};
@@ -71,11 +75,16 @@ $(function() {
 		}
 	}
 	
-	runBrot(4);
+	runBrot();
 	
 	$('#threads').change(function() {
-		var threads = parseInt($(this).val());
-		runBrot(threads);
+		threads = parseInt($(this).val());
+		runBrot();
+	});
+	
+	$canvas.dblclick(function(event) {
+		zoom /= 2;
+		runBrot();
 	});
 
 });
