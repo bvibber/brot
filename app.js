@@ -59,6 +59,9 @@ $(function() {
 				var msg = {
 					width: width,
 					height: height,
+					cx: -1,
+					cy: 0,
+					zoom: 4,
 					start: Math.floor((height / threads) * i),
 					end: Math.floor((height / threads) * (i + 1)) - 1
 				};
