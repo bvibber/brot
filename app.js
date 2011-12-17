@@ -86,5 +86,26 @@ $(function() {
 		zoom /= 2;
 		runBrot();
 	});
+	
+	$canvas.mousedown(function(event) {
+		event.preventDefault();
+		var origX = event.clientX,
+			origY = event.clientY,
+			dx = 0,
+			dy = 0;
+		$canvas
+			.bind('mousemove.dragging', function(event) {
+				dx = event.clientX - origX;
+				dy = event.clientY - origY;
+			})
+			.bind('mouseup.dragging', function(event) {
+				$canvas.unbind('mousemove.dragging');
+				$canvas.unbind('mouseup.dragging');
+				
+				cx -= (dx * zoom / width);
+				cy += (dy * zoom * 0.75 / height);
+				runBrot();
+			});
+	});
 
 });
