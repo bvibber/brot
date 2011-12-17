@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<title>Mandelbrot web workers test</title>
+	<link rel="stylesheet" href="main.css" type="text/css">
+	<script src="http://code.jquery.com/jquery-1.7.1.js"></script>
+	<script src="app.js"></script>
+
+<body>
+	<canvas id=brot width=1024 height=768></canvas>
+
+	<div id=controls>
+		<table>
+			<tbody>
+				<tr>
+					<td>Pixels
+					<td id=pixel-count>
+				<tr>
+					<td>Pixels/sec
+					<td id=pps>
+				<tr>
+					<td>
+						<label for=threads>Threads</label>
+					<td>
+						<input id=threads value=1 type=range min=1 max=32>
+		</table>
+	</div>

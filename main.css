@@ -1,0 +1,15 @@
+#brot {
+	position: absolute;
+	left: 0;
+	top: 0;
+	right: 0;
+	bottom: 0;
+}
+
+#controls {
+	position: absolute;
+	top: 0;
+	right: 0;
+	width: 320px;
+	background: rgba(255, 255, 255, 0.825);
+}
