@@ -26,6 +26,7 @@ $(function() {
 		}
 		
 		var delta = Date.now() - startTime;
+		$('#time').text(delta + ' ms');
 		$('#pps').text((width * height) / (delta / 1000));
 	}
 	
