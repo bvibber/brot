@@ -9,6 +9,7 @@ $(function() {
 		cy = 0,
 		zoom = 4,
 		threads = parseInt($('#threads').val()),
+		maxIters = parseInt($('#maxiter').val()),
 		workers = [];
 
 	function runBrot() {
@@ -32,7 +33,6 @@ $(function() {
 				row = ctx.createImageData(width, 1),
 				data = row.data,
 				i = 0;
-			
 			for (var x = 0; x < width; x++) {
 				iter = iters[x];
 				if (iter < 0) {
@@ -50,7 +50,7 @@ $(function() {
 
 			todo--;
 			if (todo == 0) {
-				terminate();
+				//terminate();
 				var delta = Date.now() - startTime;
 				$('#time').text(delta + ' ms');
 				$('#pps').text((width * height) / (delta / 1000));
@@ -72,10 +72,11 @@ $(function() {
 					cy: cy,
 					zoom: zoom,
 					start: Math.floor((height / threads) * i),
-					end: Math.floor((height / threads) * (i + 1)) - 1
+					end: Math.floor((height / threads) * (i + 1)) - 1,
+					maxIters: maxIters
 				};
 				worker.postMessage(msg);
-				workers[i] = worker;
+				workers.push(worker);
 			})();
 		}
 	}
@@ -84,6 +85,10 @@ $(function() {
 	
 	$('#threads').change(function() {
 		threads = parseInt($(this).val());
+		runBrot();
+	});
+	$('#maxiter').change(function() {
+		maxIters = parseInt($('#maxiter').val());
 		runBrot();
 	});
 	

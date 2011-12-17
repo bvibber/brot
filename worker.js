@@ -8,7 +8,8 @@ self.onmessage = function(event) {
 		cy = msg.cy,
 		zoom = msg.zoom,
 		width = msg.width,
-		height = msg.height;
+		height = msg.height,
+		maxIters = msg.maxIters;
 
 		for (var y = start; y <= end; y++) {
 			var iters = [];
@@ -16,7 +17,8 @@ self.onmessage = function(event) {
 			for (var x = 0; x < width; x++) {
 				iters[x] = mandelbrot(
 					(x - width / 2) * (zoom / width) + cx,
-					(height / 2 - y) * (zoom * 0.75 / height) + cy
+					(height / 2 - y) * (zoom * 0.75 / height) + cy,
+					maxIters
 				);
 			}
 			

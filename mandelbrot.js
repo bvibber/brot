@@ -1,5 +1,4 @@
 function mandelbrot(x, y, maxIters) {
-	maxIters = maxIters || 255;
 	var zx = 0,
 		zy = 0,
 		zxtemp,
