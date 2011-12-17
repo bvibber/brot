@@ -17,9 +17,16 @@ $(function() {
 				i = 0;
 			
 			for (var x = 0; x < width; x++) {
-				data[i++] = x % 256;
-				data[i++] = y % 256;
-				data[i++] = x % 256;
+				iter = mandelbrot(x * 4 / width - 2.5, y * 3 / height - 1.5);
+				if (iter < 0) {
+					data[i++] = 0;
+					data[i++] = 0;
+					data[i++] = 0;
+				} else {
+					data[i++] = iter % 256;
+					data[i++] = 255 - iter % 256;
+					data[i++] = iter % 256;
+				}
 				data[i++] = 255;
 			}
 			ctx.putImageData(row, 0, y);
@@ -28,6 +35,28 @@ $(function() {
 		var delta = Date.now() - startTime;
 		$('#time').text(delta + ' ms');
 		$('#pps').text((width * height) / (delta / 1000));
+	}
+
+	function mandelbrot(x, y, maxIters) {
+		maxIters = maxIters || 255;
+		var zx = 0,
+			zy = 0,
+			zxtemp,
+			zr2;
+
+		for (var i = 0; i < maxIters; i++) {
+			// z[n+1] = z[n]^2 + c
+
+			zxtemp = zx * zx - zy * zy + x;
+			zy = 2 * zx * zy + y;
+			zx = zxtemp;
+
+			zr2 = zx * zx + zy * zy;
+			if (zr2 > 4) {
+				return i;
+			}
+		}
+		return -1;
 	}
 	
 	runBrot(1);
