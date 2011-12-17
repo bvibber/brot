@@ -8,10 +8,12 @@ $(function() {
 
 	function runBrot(threads) {
 		$('#pixel-count').text(width * height);
+		ctx.clearRect(0, 0, width, height);
 		
-		var worker = new Worker('worker.js'),
-			todo = height;
-		worker.onmessage = function(event) {
+		var todo = height,
+			workers = [];
+
+		var drawLine = function(event, thread) {
 			var msg = event.data,
 				y = msg.y,
 				iters = msg.iters,
@@ -26,8 +28,8 @@ $(function() {
 					data[i++] = 0;
 					data[i++] = 0;
 				} else {
-					data[i++] = iter % 256;
-					data[i++] = 255 - iter % 256;
+					data[i + thread % 2] = 128 + iter % 128;
+					i += 2;
 					data[i++] = iter % 256;
 				}
 				data[i++] = 255;
@@ -35,7 +37,11 @@ $(function() {
 			ctx.putImageData(row, 0, y);
 
 			todo--;
-			if (todo == 0) {		
+			if (todo == 0) {
+				$.each(workers, function() {
+					this.terminate();
+				});
+				workers = null;
 				var delta = Date.now() - startTime;
 				$('#time').text(delta + ' ms');
 				$('#pps').text((width * height) / (delta / 1000));
@@ -43,14 +49,30 @@ $(function() {
 		};
 		
 		var startTime = Date.now();
-		worker.postMessage({
-			width: width,
-			height: height,
-			start: 0,
-			end: height - 1
-		});
+		for (var thread = 0; thread < threads; thread++) {
+			(function() {
+				var i = thread,
+					worker = new Worker('worker.js');
+				worker.onmessage = function(event) {
+					drawLine(event, i);
+				};
+				var msg = {
+					width: width,
+					height: height,
+					start: Math.floor((height / threads) * i),
+					end: Math.floor((height / threads) * (i + 1)) - 1
+				};
+				worker.postMessage(msg);
+				workers[i] = worker;
+			})();
+		}
 	}
 	
-	runBrot(1);
+	runBrot(4);
+	
+	$('#threads').change(function() {
+		var threads = parseInt($(this).val());
+		runBrot(threads);
+	});
 
 });
