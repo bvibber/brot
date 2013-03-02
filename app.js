@@ -34,7 +34,7 @@ $(function() {
 				data = row.data,
 				i = 0;
 			for (var x = 0; x < width; x++) {
-				iter = iters[x];
+				var iter = iters[x];
 				if (iter < 0) {
 					data[i++] = 0;
 					data[i++] = 0;
@@ -49,7 +49,7 @@ $(function() {
 			ctx.putImageData(row, 0, y);
 
 			todo--;
-			if (todo == 0) {
+			if (todo === 0) {
 				//terminate();
 				var delta = Date.now() - startTime;
 				$('#time').text(delta + ' ms');
@@ -104,11 +104,11 @@ $(function() {
 			dx = 0,
 			dy = 0;
 		$canvas
-			.bind('mousemove.dragging', function(event) {
+			.on('mousemove.dragging', function(event) {
 				dx = event.clientX - origX;
 				dy = event.clientY - origY;
 			})
-			.bind('mouseup.dragging', function(event) {
+			.on('mouseup.dragging', function(event) {
 				$canvas.unbind('mousemove.dragging');
 				$canvas.unbind('mouseup.dragging');
 				
